@@ -1,0 +1,75 @@
+# mediamtx.yml — PeakStream WebRTC/WHIP additions for live.xsen.fun
+#
+# MERGE these settings into your existing MediaMTX config.
+# This adds WHIP ingest so Mentra Live glasses can push WebRTC directly.
+#
+# Architecture:
+#   Mentra Live glasses → WHIP (https://live.xsen.fun:8443/whip/{key})
+#                       ↓
+#                 MediaMTX path
+#                       ↓
+#   Viewers → HLS  (https://live.xsen.fun:8443/hls/{key}/index.m3u8)
+#           → WebRTC (https://live.xsen.fun:8443/{key})
+#           → RTMP  (rtmp://live.xsen.fun:1935/{key})
+
+# ─── API (needed for stream health checks) ────────────────────────────────────
+api: yes
+apiAddress: :9997
+
+# ─── WebRTC ───────────────────────────────────────────────────────────────────
+webrtc: yes
+webrtcAddress: :8889
+
+# ICE servers — add TURN if glasses are on cellular
+# webrtcICEServers2:
+#   - url: turn:your-turn-server:3478
+#     username: peakstream
+#     password: secret
+
+# ─── WHIP ingest ──────────────────────────────────────────────────────────────
+# WHIP is just WebRTC over HTTP POST — the SDK uses https:// prefix to select it.
+# MediaMTX handles WHIP at: /whip/{pathName}
+# No extra config needed; WHIP is part of the webrtc block above.
+
+# ─── HLS ──────────────────────────────────────────────────────────────────────
+hls: yes
+hlsAddress: :8888
+hlsAlwaysRemux: yes
+hlsSegmentCount: 3
+hlsSegmentDuration: 1s
+hlsPartDuration: 200ms
+
+# ─── RTMP ─────────────────────────────────────────────────────────────────────
+rtmp: yes
+rtmpAddress: :1935
+
+# ─── Paths ────────────────────────────────────────────────────────────────────
+paths:
+
+  # PeakStream FanCast POV — glasses push WHIP here
+  # Stream key pattern: fancast-{n}, e.g. fancast-1, fancast-2
+  fancast-~:
+    # Allow anyone to publish (lock down with publishUser/publishPass in prod)
+    # publishUser: peakstream
+    # publishPassword: changeme
+    record: no
+    runOnReady: ""
+    runOnReadyRestart: no
+
+  # NMHU channel — dedicated path for NMHU athletics
+  nmhu-~:
+    record: no
+
+  # General catch-all — allows any stream key
+  "~":
+    record: no
+
+# ─── TLS (your existing cert) ─────────────────────────────────────────────────
+# If your nginx is terminating TLS and proxying to MediaMTX, leave this out.
+# If MediaMTX handles TLS directly:
+# hlsEncryption: yes
+# hlsServerCert: /path/to/cert.pem
+# hlsServerKey: /path/to/key.pem
+# webrtcEncryption: yes
+# webrtcServerCert: /path/to/cert.pem
+# webrtcServerKey: /path/to/key.pem
