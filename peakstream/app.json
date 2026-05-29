@@ -39,33 +39,27 @@
         "android.permission.POST_NOTIFICATIONS"
       ]
     },
-    "plugins": [
-      [
-        "@mentra/bluetooth-sdk",
-        {
-          "node": true
+   "plugins": [
+  [
+    "expo-build-properties",
+    {
+      "android": {
+        "minSdkVersion": 28,
+        "packagingOptions": {
+          "pickFirst": [
+            "**/libc++_shared.so",
+            "**/libonnxruntime.so",
+            "**/libonnxruntime4j_jni.so"
+          ]
         }
-      ],
-      [
-        "expo-build-properties",
-        {
-          "android": {
-            "minSdkVersion": 28,
-            "packagingOptions": {
-              "pickFirst": [
-                "**/libc++_shared.so",
-                "**/libonnxruntime.so",
-                "**/libonnxruntime4j_jni.so"
-              ]
-            }
-          },
-          "ios": {
-            "deploymentTarget": "15.1"
-          }
-        }
-      ],
-      "expo-router"
-    ],
+      },
+      "ios": {
+        "deploymentTarget": "15.1"
+      }
+    }
+  ],
+  "expo-router"
+],
     "experiments": {
       "typedRoutes": true
     },
