@@ -1,0 +1,19 @@
+diff --git a/node_modules/@mentra/bluetooth-sdk/android/build.gradle b/node_modules/@mentra/bluetooth-sdk/android/build.gradle
+index e5d0bc1..60c5f74 100644
+--- a/node_modules/@mentra/bluetooth-sdk/android/build.gradle
++++ b/node_modules/@mentra/bluetooth-sdk/android/build.gradle
+@@ -43,9 +43,11 @@ android {
+     versionName packageJson.version
+   }
+   publishing {
+-    singleVariant("release") {
+-      withSourcesJar()
+-      withJavadocJar()
++    if (!components.names.contains("release")) {
++      singleVariant("release") {
++        withSourcesJar()
++        withJavadocJar()
++      }
+     }
+   }
+   lintOptions {
