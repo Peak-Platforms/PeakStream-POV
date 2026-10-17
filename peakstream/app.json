@@ -15,7 +15,7 @@
     },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.peakplatforms.peakstream",
+      "bundleIdentifier": "com.peakplatforms.streampalpov",
       "infoPlist": {
         "NSBluetoothAlwaysUsageDescription": "StreamPal POV connects to your Mentra Live glasses over Bluetooth to control streaming.",
         "NSMicrophoneUsageDescription": "StreamPal POV uses the microphone when audio features are enabled.",
@@ -31,7 +31,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0a0a0f"
       },
-      "package": "com.peakplatforms.peakstream",
+      "package": "com.peakplatforms.streampalpov",
       "permissions": [
         "android.permission.BLUETOOTH_SCAN",
         "android.permission.BLUETOOTH_CONNECT",
