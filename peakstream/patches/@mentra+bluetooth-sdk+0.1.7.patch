@@ -1,19 +1,19 @@
 diff --git a/node_modules/@mentra/bluetooth-sdk/android/build.gradle b/node_modules/@mentra/bluetooth-sdk/android/build.gradle
-index e5d0bc1..60c5f74 100644
+index e5d0bc1..f1e7ea4 100644
 --- a/node_modules/@mentra/bluetooth-sdk/android/build.gradle
 +++ b/node_modules/@mentra/bluetooth-sdk/android/build.gradle
-@@ -43,9 +43,11 @@ android {
+@@ -42,12 +42,8 @@ android {
+     versionCode 1
      versionName packageJson.version
    }
-   publishing {
+-  publishing {
 -    singleVariant("release") {
 -      withSourcesJar()
 -      withJavadocJar()
-+    if (!components.names.contains("release")) {
-+      singleVariant("release") {
-+        withSourcesJar()
-+        withJavadocJar()
-+      }
-     }
-   }
+-    }
+-  }
++  // singleVariant("release") is already registered by useExpoPublishing() above;
++  // declaring it again fails the build, so it is not repeated here.
    lintOptions {
+     abortOnError false
+   }
