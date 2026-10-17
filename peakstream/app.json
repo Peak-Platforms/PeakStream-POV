@@ -59,7 +59,8 @@
           }
         }
       ],
-      "expo-router"
+      "expo-router",
+      "@mentra/bluetooth-sdk"
     ],
     "experiments": {
       "typedRoutes": true
