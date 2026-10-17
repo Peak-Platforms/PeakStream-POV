@@ -15,7 +15,7 @@ import BluetoothSdk, { DeviceModels, Device } from '@mentra/bluetooth-sdk';
 import {
   useMentraBluetooth,
   useBluetoothEvent,
-} from '@mentra/bluetooth-sdk';
+} from '@mentra/bluetooth-sdk/react';
 import { STREAM_CONFIG, StreamProtocol } from '../utils/constants';
 
 // ─── Types ────────────────────────────────────────────────────────────────────

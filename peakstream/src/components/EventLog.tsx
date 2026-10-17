@@ -5,7 +5,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import { useBluetoothEvent } from '@mentra/bluetooth-sdk';
+import { useBluetoothEvent } from '@mentra/bluetooth-sdk/react';
 
 interface LogEntry {
   id: number;
