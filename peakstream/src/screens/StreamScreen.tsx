@@ -86,6 +86,22 @@ export function StreamScreen() {
           </View>
         )}
 
+        {/* Glasses WiFi status */}
+        {status.glassesConnected && (
+          <View
+            style={[
+              styles.wifiBar,
+              status.wifiConnected ? styles.wifiBarOk : styles.wifiBarBad,
+            ]}
+          >
+            <Text style={status.wifiConnected ? styles.wifiTextOk : styles.wifiTextBad}>
+              {status.wifiConnected
+                ? `WiFi: connected to ${status.wifiSsid ?? 'network'}`
+                : 'WiFi: NOT connected. Send WiFi to the glasses and wait for connected.'}
+            </Text>
+          </View>
+        )}
+
         {/* Reconnect button when disconnected and a saved device exists */}
         {!status.glassesConnected && bleConnectionState === 'disconnected' && (
           <TouchableOpacity style={styles.reconnectBtn} onPress={reconnectDefault}>
@@ -119,7 +135,7 @@ export function StreamScreen() {
           state={status.state}
           onStart={handleStart}
           onStop={stopStream}
-          disabled={!status.glassesConnected}
+          disabled={!status.glassesConnected || !status.wifiConnected}
         />
 
         {/* Live metrics */}
@@ -218,6 +234,30 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '700',
     letterSpacing: 1.5,
+  },
+  wifiBar: {
+    borderRadius: 8,
+    borderWidth: 1,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+  },
+  wifiBarOk: {
+    backgroundColor: '#0d1f0d',
+    borderColor: '#166534',
+  },
+  wifiBarBad: {
+    backgroundColor: '#2d1515',
+    borderColor: '#ef4444',
+  },
+  wifiTextOk: {
+    color: '#86efac',
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  wifiTextBad: {
+    color: '#fca5a5',
+    fontSize: 13,
+    fontWeight: '600',
   },
   reconnectBtn: {
     borderRadius: 8,

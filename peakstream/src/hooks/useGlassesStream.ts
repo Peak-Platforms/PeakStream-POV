@@ -36,6 +36,8 @@ export interface StreamStatus {
   hlsUrl: string | null;
   whipUrl: string | null;
   glassesConnected: boolean;
+  wifiConnected: boolean;
+  wifiSsid: string | null;
   glassesBattery: number | null;
   glassesModel: string | null;
   streamDurationSeconds: number;
@@ -55,6 +57,12 @@ export function useGlassesStream() {
   const [discoveredDevices, setDiscoveredDevices] = useState<Device[]>([]);
   const [isScanning, setIsScanning] = useState(false);
   const [duration, setDuration] = useState(0);
+
+  // Glasses WiFi state, reported by the glasses themselves (the glasses stream
+  // over their own WiFi, so Go Live only works when this is connected).
+  const wifi = mentra.glasses.connected ? (mentra.glasses as any).wifi : null;
+  const wifiConnected = wifi?.state === 'connected';
+  const wifiSsid: string | null = wifiConnected ? wifi.ssid ?? null : null;
 
   // Duration ticker
   useEffect(() => {
@@ -86,7 +94,10 @@ export function useGlassesStream() {
       status === 'disconnected'
     ) {
       setStreamState('stream_error');
-      setError((event as any).errorMessage ?? 'Stream error from glasses');
+      setError(
+        (event as any).errorMessage ??
+          `Stream error from glasses: ${JSON.stringify(event)}`
+      );
       stopKeepAlive();
     } else if (status === 'stopped' || status === 'idle') {
       setStreamState('ble_connected');
@@ -187,6 +198,12 @@ export function useGlassesStream() {
         setError('Glasses not connected');
         return;
       }
+      if (!wifiConnected) {
+        setError(
+          'Glasses are not connected to WiFi. Send WiFi to the glasses and wait until WiFi shows connected, then Go Live.'
+        );
+        return;
+      }
 
       setStreamState('stream_starting');
       setError(null);
@@ -226,7 +243,7 @@ export function useGlassesStream() {
         stopKeepAlive();
       }
     },
-    [mentra.glasses.connected, startKeepAlive, stopKeepAlive]
+    [mentra.glasses.connected, wifiConnected, startKeepAlive, stopKeepAlive]
   );
 
   // ─── Stop Stream ────────────────────────────────────────────────────────────
@@ -270,6 +287,8 @@ export function useGlassesStream() {
     hlsUrl: streamKey ? STREAM_CONFIG.hlsUrl(streamKey) : null,
     whipUrl: streamKey ? STREAM_CONFIG.whipUrl(streamKey) : null,
     glassesConnected,
+    wifiConnected,
+    wifiSsid,
     glassesBattery: battery,
     glassesModel,
     streamDurationSeconds: duration,
