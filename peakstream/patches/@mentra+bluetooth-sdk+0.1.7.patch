@@ -1,5 +1,5 @@
 diff --git a/node_modules/@mentra/bluetooth-sdk/android/build.gradle b/node_modules/@mentra/bluetooth-sdk/android/build.gradle
-index e5d0bc1..f1e7ea4 100644
+index e5d0bc1..46affc9 100644
 --- a/node_modules/@mentra/bluetooth-sdk/android/build.gradle
 +++ b/node_modules/@mentra/bluetooth-sdk/android/build.gradle
 @@ -42,12 +42,8 @@ android {
@@ -17,3 +17,55 @@ index e5d0bc1..f1e7ea4 100644
    lintOptions {
      abortOnError false
    }
+@@ -113,48 +109,6 @@ configurations.all {
+   }
+ }
+ 
+-afterEvaluate {
+-  publishing {
+-    publications {
+-      release(MavenPublication) {
+-        groupId = 'com.mentra'
+-        artifactId = 'bluetooth-sdk'
+-        version = project.version
+-
+-        from components.release
+-
+-        pom {
+-          name = 'Mentra Bluetooth SDK'
+-          description = 'SDK for communicating with smart glasses'
+-          url = 'https://github.com/Mentra-Community/MentraOS'
+-          licenses {
+-            license {
+-              name = 'MIT License'
+-              url = 'https://opensource.org/licenses/MIT'
+-            }
+-          }
+-          developers {
+-            developer {
+-              id = 'mentra'
+-              name = 'Mentra'
+-              email = 'dev@mentra.glass'
+-            }
+-          }
+-          scm {
+-            connection = 'scm:git:https://github.com/Mentra-Community/MentraOS.git'
+-            developerConnection = 'scm:git:ssh://git@github.com:Mentra-Community/MentraOS.git'
+-            url = 'https://github.com/Mentra-Community/MentraOS'
+-          }
+-        }
+-      }
+-    }
+-  }
+-
+-  signing {
+-    required {
+-      gradle.taskGraph.allTasks.any { it.name.toLowerCase().contains("publish") } &&
+-        (findProperty("signing.keyId") || findProperty("signingKey"))
+-    }
+-    sign publishing.publications.release
+-  }
+-}
++// Publishing is already configured by useExpoPublishing() above. The SDK's own
++// publishing/signing block created a second 'release' publication and broke the app build,
++// so it is removed here (it is only needed to publish the SDK, not to build the app).
