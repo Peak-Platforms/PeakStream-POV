@@ -2,6 +2,7 @@
   "expo": {
     "name": "StreamPal POV",
     "slug": "peakstream",
+    "owner": "peak-platforms",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -39,27 +40,27 @@
         "android.permission.POST_NOTIFICATIONS"
       ]
     },
-   "plugins": [
-  [
-    "expo-build-properties",
-    {
-      "android": {
-        "minSdkVersion": 28,
-        "packagingOptions": {
-          "pickFirst": [
-            "**/libc++_shared.so",
-            "**/libonnxruntime.so",
-            "**/libonnxruntime4j_jni.so"
-          ]
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "minSdkVersion": 28,
+            "packagingOptions": {
+              "pickFirst": [
+                "**/libc++_shared.so",
+                "**/libonnxruntime.so",
+                "**/libonnxruntime4j_jni.so"
+              ]
+            }
+          },
+          "ios": {
+            "deploymentTarget": "15.1"
+          }
         }
-      },
-      "ios": {
-        "deploymentTarget": "15.1"
-      }
-    }
-  ],
-  "expo-router"
-],
+      ],
+      "expo-router"
+    ],
     "experiments": {
       "typedRoutes": true
     },
