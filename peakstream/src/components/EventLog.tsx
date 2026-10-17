@@ -55,7 +55,7 @@ export function EventLog() {
   });
 
   useEffect(() => {
-    addLog('SYSTEM', 'PeakStream event log ready', '#22c55e');
+    addLog('SYSTEM', 'StreamPal POV event log ready', '#22c55e');
   }, []);
 
   return (

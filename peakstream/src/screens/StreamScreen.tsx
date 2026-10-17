@@ -58,7 +58,7 @@ export function StreamScreen() {
         {/* Header */}
         <View style={styles.header}>
           <View>
-            <Text style={styles.wordmark}>PEAK<Text style={styles.wordmarkAccent}>STREAM</Text></Text>
+            <Text style={styles.wordmark}>STREAM<Text style={styles.wordmarkAccent}>PAL</Text> POV</Text>
             <Text style={styles.tagline}>Mentra Live · WebRTC Broadcasting</Text>
           </View>
           <StatusBadge state={status.state} />

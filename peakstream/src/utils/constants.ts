@@ -26,7 +26,7 @@ export const STREAM_CONFIG = {
 } as const;
 
 export const APP_CONFIG = {
-  name: 'PeakStream',
+  name: 'StreamPal POV',
   tagline: 'Purpose-Built Streaming for Mission-Driven People',
   version: '1.0.0',
   supportedModels: ['Mentra Live'],

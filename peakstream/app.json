@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "PeakStream",
+    "name": "StreamPal POV",
     "slug": "peakstream",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -16,9 +16,9 @@
       "supportsTablet": false,
       "bundleIdentifier": "com.peakplatforms.peakstream",
       "infoPlist": {
-        "NSBluetoothAlwaysUsageDescription": "PeakStream connects to your Mentra Live glasses over Bluetooth to control streaming.",
-        "NSMicrophoneUsageDescription": "PeakStream uses the microphone when audio features are enabled.",
-        "NSLocalNetworkUsageDescription": "PeakStream connects to local streaming helpers during development.",
+        "NSBluetoothAlwaysUsageDescription": "StreamPal POV connects to your Mentra Live glasses over Bluetooth to control streaming.",
+        "NSMicrophoneUsageDescription": "StreamPal POV uses the microphone when audio features are enabled.",
+        "NSLocalNetworkUsageDescription": "StreamPal POV connects to local streaming helpers during development.",
         "UIBackgroundModes": [
           "bluetooth-central",
           "audio"
