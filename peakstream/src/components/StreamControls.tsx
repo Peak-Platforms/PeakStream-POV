@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import { StreamState } from '../hooks/useGlassesStream';
-import { STREAM_PRESETS, StreamProtocol } from '../utils/constants';
+import { STREAM_CONFIG, STREAM_PRESETS, StreamProtocol } from '../utils/constants';
 
 interface Props {
   state: StreamState;
@@ -68,12 +68,12 @@ export function StreamControls({ state, onStart, onStop, disabled }: Props) {
 
       {protocol === 'whip' && (
         <Text style={styles.urlPreview}>
-          → https://live.xsen.fun:8443/whip/{streamKey || '…'}
+          → {STREAM_CONFIG.whipUrl(streamKey || '…')}
         </Text>
       )}
       {protocol === 'rtmp' && (
         <Text style={styles.urlPreview}>
-          → rtmp://157.245.208.49:1935/live/{streamKey || '…'}
+          → {STREAM_CONFIG.rtmpUrl(streamKey || '…')}
         </Text>
       )}
 

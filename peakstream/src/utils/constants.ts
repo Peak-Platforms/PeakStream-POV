@@ -5,10 +5,10 @@ export const STREAM_CONFIG = {
   // Your existing MediaMTX server
   MEDIAMTX_HOST: 'live.xsen.fun:8443',
 
-  // WHIP ingest — glasses push to this HTTPS endpoint
-  // MediaMTX path: /whip/{streamKey}
+  // WHIP ingest — glasses push to this HTTPS endpoint (MediaMTX via the
+  // peak.streampal.fun:8444 proxy). MediaMTX WHIP path: /{streamKey}/whip
   whipUrl: (streamKey: string) =>
-    `https://live.xsen.fun:8443/whip/${streamKey}`,
+    `https://peak.streampal.fun:8444/${streamKey}/whip`,
 
   // HLS playback — viewers watch from this URL
   hlsUrl: (streamKey: string) =>
