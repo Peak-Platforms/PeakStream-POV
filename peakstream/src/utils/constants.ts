@@ -39,4 +39,14 @@ export const STREAM_PRESETS = [
   { label: 'SRT (Reliable)', protocol: 'srt' as const, recommended: false },
 ] as const;
 
+// Video quality presets (sent to the glasses when the stream starts).
+// 'auto' leaves the glasses on their own defaults (currently 640x360, ~15 fps).
+export const QUALITY_PRESETS = [
+  { id: 'auto', label: 'Auto', video: undefined },
+  { id: 'sd', label: '360p · 24', video: { width: 640, height: 360, fps: 24, bitrate: 1000000 } },
+  { id: 'hd', label: '720p · 24', video: { width: 1280, height: 720, fps: 24, bitrate: 2000000 } },
+] as const;
+
+export type StreamQuality = (typeof QUALITY_PRESETS)[number]['id'];
+
 export type StreamProtocol = 'whip' | 'rtmp' | 'srt';

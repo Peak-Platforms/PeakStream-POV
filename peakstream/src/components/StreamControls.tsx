@@ -7,18 +7,25 @@ import {
   View,
 } from 'react-native';
 import { StreamState } from '../hooks/useGlassesStream';
-import { STREAM_CONFIG, STREAM_PRESETS, StreamProtocol } from '../utils/constants';
+import {
+  STREAM_CONFIG,
+  STREAM_PRESETS,
+  QUALITY_PRESETS,
+  StreamProtocol,
+  StreamQuality,
+} from '../utils/constants';
 
 interface Props {
   state: StreamState;
-  onStart: (key: string, protocol: StreamProtocol) => void;
+  onStart: (key: string, protocol: StreamProtocol, quality: StreamQuality) => void;
   onStop: () => void;
   disabled: boolean;
 }
 
 export function StreamControls({ state, onStart, onStop, disabled }: Props) {
-  const [streamKey, setStreamKey] = useState('fancast-1');
+  const [streamKey, setStreamKey] = useState('glasses_test');
   const [protocol, setProtocol] = useState<StreamProtocol>('whip');
+  const [quality, setQuality] = useState<StreamQuality>('auto');
 
   const isStreaming = state === 'streaming' || state === 'stream_starting' || state === 'stopping';
   const canStart = !disabled && (state === 'ble_connected' || state === 'stream_error');
@@ -31,7 +38,7 @@ export function StreamControls({ state, onStart, onStop, disabled }: Props) {
         style={[styles.input, isStreaming && styles.inputDisabled]}
         value={streamKey}
         onChangeText={setStreamKey}
-        placeholder="fancast-1"
+        placeholder="glasses_test"
         placeholderTextColor="#4b5563"
         editable={!isStreaming}
         autoCapitalize="none"
@@ -66,6 +73,31 @@ export function StreamControls({ state, onStart, onStop, disabled }: Props) {
         ))}
       </View>
 
+      <Text style={[styles.sectionLabel, { marginTop: 16 }]}>VIDEO QUALITY</Text>
+      <View style={styles.protocolRow}>
+        {QUALITY_PRESETS.map((q) => (
+          <TouchableOpacity
+            key={q.id}
+            style={[
+              styles.protocolBtn,
+              quality === q.id && styles.protocolBtnActive,
+              isStreaming && styles.protocolBtnDisabled,
+            ]}
+            onPress={() => !isStreaming && setQuality(q.id)}
+            disabled={isStreaming}
+          >
+            <Text
+              style={[
+                styles.protocolLabel,
+                quality === q.id && styles.protocolLabelActive,
+              ]}
+            >
+              {q.label}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
       {protocol === 'whip' && (
         <Text style={styles.urlPreview}>
           → {STREAM_CONFIG.whipUrl(streamKey || '…')}
@@ -85,7 +117,7 @@ export function StreamControls({ state, onStart, onStop, disabled }: Props) {
         ) : (
           <TouchableOpacity
             style={[styles.startBtn, !canStart && styles.startBtnDisabled]}
-            onPress={() => canStart && onStart(streamKey.trim() || 'fancast-1', protocol)}
+            onPress={() => canStart && onStart(streamKey.trim() || 'glasses_test', protocol, quality)}
             disabled={!canStart}
           >
             <Text style={[styles.startBtnText, !canStart && styles.startBtnTextDisabled]}>

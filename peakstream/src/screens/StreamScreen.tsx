@@ -13,8 +13,8 @@ import { StatusBadge } from '../components/StatusBadge';
 import { DevicePicker } from '../components/DevicePicker';
 import { StreamControls } from '../components/StreamControls';
 import { LiveMetrics } from '../components/LiveMetrics';
-import { EventLog } from '../components/EventLog';
-import { StreamProtocol } from '../utils/constants';
+import { NetworkPanel } from '../components/NetworkPanel';
+import { StreamProtocol, StreamQuality } from '../utils/constants';
 
 export function StreamScreen() {
   const {
@@ -27,6 +27,11 @@ export function StreamScreen() {
     disconnect,
     startStream,
     stopStream,
+    wifiScanResults,
+    wifiBusy,
+    scanWifi,
+    connectWifi,
+    forgetWifi,
     bleConnectionState,
   } = useGlassesStream();
 
@@ -41,8 +46,8 @@ export function StreamScreen() {
     );
   };
 
-  const handleStart = (key: string, protocol: StreamProtocol) => {
-    startStream(key, protocol);
+  const handleStart = (key: string, protocol: StreamProtocol, quality: StreamQuality) => {
+    startStream(key, protocol, quality);
   };
 
   const showDevicePicker = !status.glassesConnected && bleConnectionState !== 'connecting';
@@ -141,8 +146,18 @@ export function StreamScreen() {
         {/* Live metrics */}
         <LiveMetrics status={status} />
 
-        {/* Event log */}
-        <EventLog />
+        {/* Glasses network (replaces the old event log) */}
+        {status.glassesConnected && (
+          <NetworkPanel
+            currentSsid={status.wifiSsid}
+            results={wifiScanResults}
+            busy={wifiBusy}
+            streaming={status.state === 'streaming' || status.state === 'stream_starting'}
+            onScan={scanWifi}
+            onConnect={connectWifi}
+            onForget={forgetWifi}
+          />
+        )}
 
         {/* Footer */}
         <Text style={styles.footer}>

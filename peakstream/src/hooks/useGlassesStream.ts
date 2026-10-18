@@ -16,7 +16,12 @@ import {
   useMentraBluetooth,
   useBluetoothEvent,
 } from '@mentra/bluetooth-sdk/react';
-import { STREAM_CONFIG, StreamProtocol } from '../utils/constants';
+import {
+  STREAM_CONFIG,
+  StreamProtocol,
+  StreamQuality,
+  QUALITY_PRESETS,
+} from '../utils/constants';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -63,6 +68,37 @@ export function useGlassesStream() {
   const wifi = mentra.glasses.connected ? (mentra.glasses as any).wifi : null;
   const wifiConnected = wifi?.state === 'connected';
   const wifiSsid: string | null = wifiConnected ? wifi.ssid ?? null : null;
+
+  // WiFi network management (scan / send / forget), all via the glasses
+  const wifiScanResults = mentra.sdk.wifiScanResults;
+  const [wifiBusy, setWifiBusy] = useState(false);
+
+  const scanWifi = useCallback(async () => {
+    setWifiBusy(true);
+    try {
+      await BluetoothSdk.requestWifiScan();
+    } catch (e: any) {
+      setError(e?.message ?? 'WiFi scan failed');
+    } finally {
+      setTimeout(() => setWifiBusy(false), 4000);
+    }
+  }, []);
+
+  const connectWifi = useCallback(async (ssid: string, password: string) => {
+    try {
+      await BluetoothSdk.sendWifiCredentials(ssid, password);
+    } catch (e: any) {
+      setError(e?.message ?? 'Could not send WiFi to the glasses');
+    }
+  }, []);
+
+  const forgetWifi = useCallback(async (ssid: string) => {
+    try {
+      await BluetoothSdk.forgetWifiNetwork(ssid);
+    } catch (e: any) {
+      setError(e?.message ?? 'Could not forget that network');
+    }
+  }, []);
 
   // Duration ticker
   useEffect(() => {
@@ -193,7 +229,11 @@ export function useGlassesStream() {
 
   // ─── Start Stream ───────────────────────────────────────────────────────────
   const startStream = useCallback(
-    async (key: string, protocol: StreamProtocol = 'whip') => {
+    async (
+      key: string,
+      protocol: StreamProtocol = 'whip',
+      quality: StreamQuality = 'auto'
+    ) => {
       if (!mentra.glasses.connected) {
         setError('Glasses not connected');
         return;
@@ -226,6 +266,9 @@ export function useGlassesStream() {
           type: 'start_stream',
           streamUrl,
           streamId,
+          ...(QUALITY_PRESETS.find((q) => q.id === quality)?.video
+            ? { video: QUALITY_PRESETS.find((q) => q.id === quality)!.video }
+            : {}),
         });
 
         startKeepAlive(streamId);
@@ -304,6 +347,11 @@ export function useGlassesStream() {
     disconnect,
     startStream,
     stopStream,
+    wifiScanResults,
+    wifiBusy,
+    scanWifi,
+    connectWifi,
+    forgetWifi,
     bleConnectionState: mentra.glasses.connection.state,
   };
 }
