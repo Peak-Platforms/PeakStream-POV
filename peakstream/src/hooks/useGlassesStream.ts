@@ -150,19 +150,10 @@ export function useGlassesStream() {
     streamStartTimeRef.current = null;
   }, []);
 
-  const startKeepAlive = useCallback((streamId: string) => {
+  // SDK 3.x no longer needs phone-side keep-alive pings for WHIP streams
+  // (the glasses keep publishing on their own), so this is now a no-op.
+  const startKeepAlive = useCallback((_streamId: string) => {
     stopKeepAlive();
-    keepAliveRef.current = setInterval(async () => {
-      try {
-        await BluetoothSdk.keepStreamAlive({
-          type: 'keep_stream_alive',
-          streamId,
-          ackId: `ack-${Date.now()}`,
-        });
-      } catch (e) {
-        console.warn('[PeakStream] keepStreamAlive failed:', e);
-      }
-    }, STREAM_CONFIG.KEEP_ALIVE_INTERVAL_MS);
   }, [stopKeepAlive]);
 
   // ─── Scan ───────────────────────────────────────────────────────────────────

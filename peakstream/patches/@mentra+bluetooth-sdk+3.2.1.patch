@@ -1,10 +1,10 @@
 diff --git a/node_modules/@mentra/bluetooth-sdk/android/build.gradle b/node_modules/@mentra/bluetooth-sdk/android/build.gradle
-index e5d0bc1..46affc9 100644
+index 75955d6..a51f6c7 100644
 --- a/node_modules/@mentra/bluetooth-sdk/android/build.gradle
 +++ b/node_modules/@mentra/bluetooth-sdk/android/build.gradle
-@@ -42,12 +42,8 @@ android {
-     versionCode 1
-     versionName packageJson.version
+@@ -215,12 +215,6 @@ android {
+     versionName project.version
+     buildConfigField "String", "SDK_VERSION", "\"${project.version}\""
    }
 -  publishing {
 -    singleVariant("release") {
@@ -12,12 +12,10 @@ index e5d0bc1..46affc9 100644
 -      withJavadocJar()
 -    }
 -  }
-+  // singleVariant("release") is already registered by useExpoPublishing() above;
-+  // declaring it again fails the build, so it is not repeated here.
    lintOptions {
      abortOnError false
    }
-@@ -113,48 +109,6 @@ configurations.all {
+@@ -343,70 +337,6 @@ configurations.all {
    }
  }
  
@@ -25,7 +23,7 @@ index e5d0bc1..46affc9 100644
 -  publishing {
 -    publications {
 -      release(MavenPublication) {
--        groupId = 'com.mentra'
+-        groupId = mavenGroupId
 -        artifactId = 'bluetooth-sdk'
 -        version = project.version
 -
@@ -37,8 +35,8 @@ index e5d0bc1..46affc9 100644
 -          url = 'https://github.com/Mentra-Community/MentraOS'
 -          licenses {
 -            license {
--              name = 'MIT License'
--              url = 'https://opensource.org/licenses/MIT'
+-              name = 'Apache License, Version 2.0'
+-              url = 'https://www.apache.org/licenses/LICENSE-2.0.txt'
 -            }
 -          }
 -          developers {
@@ -56,16 +54,35 @@ index e5d0bc1..46affc9 100644
 -        }
 -      }
 -    }
+-    repositories {
+-      maven {
+-        name = 'sonatypeCentral'
+-        def repositoryUrl = System.getenv('MENTRA_MAVEN_STAGING_REPOSITORY_URL') ?: 'https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/'
+-        url = uri(repositoryUrl)
+-        if (repositoryUrl.startsWith('http')) {
+-          credentials {
+-            username = centralUsername()
+-            password = centralPassword()
+-          }
+-        }
+-      }
+-    }
 -  }
 -
 -  signing {
+-    def inMemorySigningKey = signingKey()
+-    if (inMemorySigningKey) {
+-      useInMemoryPgpKeys(inMemorySigningKey, signingPassword())
+-    } else if (shouldUseGpgCmd()) {
+-      useGpgCmd()
+-    }
 -    required {
--      gradle.taskGraph.allTasks.any { it.name.toLowerCase().contains("publish") } &&
--        (findProperty("signing.keyId") || findProperty("signingKey"))
+-      isCentralPublishTask()
 -    }
 -    sign publishing.publications.release
 -  }
 -}
-+// Publishing is already configured by useExpoPublishing() above. The SDK's own
-+// publishing/signing block created a second 'release' publication and broke the app build,
-+// so it is removed here (it is only needed to publish the SDK, not to build the app).
+-
+ tasks.withType(Sign).configureEach {
+   onlyIf { isCentralPublishTask() }
+ }

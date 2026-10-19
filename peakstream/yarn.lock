@@ -1304,10 +1304,19 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@mentra/bluetooth-sdk@0.1.7":
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/@mentra/bluetooth-sdk/-/bluetooth-sdk-0.1.7.tgz#f12f8bd40813058280ba7cc8ed841dddd6ab03a8"
-  integrity sha512-FsY7c9egNo2Dvov/GR43RS3fVtgCPUjoEwpVD6iikm1PP4nWM0UKe1iJVUG7HqgL93llibNlOr3bQs3CYoEhAg==
+"@mentra/bluetooth-sdk@3.2.1":
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/@mentra/bluetooth-sdk/-/bluetooth-sdk-3.2.1.tgz#749de8f833dfc61dcb87b48e29c6834e5796d029"
+  integrity sha512-Y1w8717O6gah2wIiPKzvnmGhyYnouONGSSlWA/OBQCxhG7v5UXtOUACI1wFF8tkYKNjN/kXOZ+98zXrCBoU8LA==
+  dependencies:
+    "@mentra/cloud-protocol" "3.2.1"
+
+"@mentra/cloud-protocol@3.2.1":
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/@mentra/cloud-protocol/-/cloud-protocol-3.2.1.tgz#e22ef1b4fb2b0bd82e54b78afc60a56896a87156"
+  integrity sha512-cL7LGfvMZL8/kyI2hNHuYUF053dNgmdZGaJneCwXElfx2aqlXxKJie7Fr+3N4VSv3ACH5CwyOBPxMV3vOWZ/RA==
+  dependencies:
+    zod "^3.24.1"
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
@@ -6234,3 +6243,8 @@ yocto-queue@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
+
+zod@^3.24.1:
+  version "3.25.76"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-3.25.76.tgz#26841c3f6fd22a6a2760e7ccb719179768471e34"
+  integrity sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==
