@@ -13,6 +13,12 @@
     },
     "production": {
       "autoIncrement": true
+    },
+    "test": {
+      "distribution": "internal",
+      "env": {
+        "APP_VARIANT": "test"
+      }
     }
   },
   "submit": {
