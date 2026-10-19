@@ -45,6 +45,7 @@ export const QUALITY_PRESETS = [
   { id: 'auto', label: 'Auto', video: undefined },
   { id: 'sd', label: '360p · 24', video: { width: 640, height: 360, fps: 24, bitrate: 1000000 } },
   { id: 'hd', label: '720p · 24', video: { width: 1280, height: 720, fps: 24, bitrate: 2000000 } },
+  { id: 'hd4', label: '720p · 4M', video: { width: 1280, height: 720, fps: 24, bitrate: 4000000 } },
 ] as const;
 
 export type StreamQuality = (typeof QUALITY_PRESETS)[number]['id'];
