@@ -100,26 +100,18 @@ index d843651..f7e1965 100644
          }
  
 diff --git a/node_modules/@mentra/bluetooth-sdk/android/src/main/java/com/mentra/bluetoothsdk/MentraBluetoothSdk.kt b/node_modules/@mentra/bluetooth-sdk/android/src/main/java/com/mentra/bluetoothsdk/MentraBluetoothSdk.kt
-index b56ab97..0f24375 100644
+index b56ab97..7654326 100644
 --- a/node_modules/@mentra/bluetooth-sdk/android/src/main/java/com/mentra/bluetoothsdk/MentraBluetoothSdk.kt
 +++ b/node_modules/@mentra/bluetooth-sdk/android/src/main/java/com/mentra/bluetoothsdk/MentraBluetoothSdk.kt
-@@ -37,7 +37,7 @@ class MentraBluetoothSdk private constructor(
-     private val discoveredDeviceNames = mutableSetOf<String>()
-     private val bridgeEventSinkId: String
-     private val storeListenerId: String
--    private val activityLifecycleCallbacks =
-+    private val activityLifecycleCallbacks: Application.ActivityLifecycleCallbacks by lazy {
-         object : Application.ActivityLifecycleCallbacks {
-             override fun onActivityResumed(activity: Activity) {
-                 // Match the Mentra App's OnActivityEntersForeground hook. This runs after
-@@ -53,6 +53,7 @@ class MentraBluetoothSdk private constructor(
-             override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) = Unit
-             override fun onActivityDestroyed(activity: Activity) = Unit
-         }
-+    }
-     private var activityLifecycleCallbacksRegistered = false
-     private var suppressDefaultDeviceEvents = false
-     private val streamSession = StreamSessionState()
+@@ -30,7 +30,7 @@ class MentraBluetoothSdk private constructor(
+ ) : AutoCloseable {
+     private val appContext = context.applicationContext
+     private val mainHandler = Handler(Looper.getMainLooper())
+-    private val deviceManager: DeviceManager
++    private lateinit var deviceManager: DeviceManager
+     private val listeners =
+         Collections.synchronizedSet(mutableSetOf<MentraBluetoothSdkListener>())
+     private val analytics = BluetoothSdkAnalytics(appContext, config.analytics)
 diff --git a/node_modules/@mentra/bluetooth-sdk/android/src/main/java/com/mentra/bluetoothsdk/sgcs/Nimo.kt b/node_modules/@mentra/bluetooth-sdk/android/src/main/java/com/mentra/bluetoothsdk/sgcs/Nimo.kt
 index 78b54b2..7e27585 100644
 --- a/node_modules/@mentra/bluetooth-sdk/android/src/main/java/com/mentra/bluetoothsdk/sgcs/Nimo.kt
