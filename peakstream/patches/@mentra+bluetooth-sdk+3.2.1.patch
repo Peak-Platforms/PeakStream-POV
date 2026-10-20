@@ -86,3 +86,62 @@ index 75955d6..a51f6c7 100644
  tasks.withType(Sign).configureEach {
    onlyIf { isCentralPublishTask() }
  }
+diff --git a/node_modules/@mentra/bluetooth-sdk/android/src/main/java/com/mentra/bluetoothsdk/DeviceManager.kt b/node_modules/@mentra/bluetooth-sdk/android/src/main/java/com/mentra/bluetoothsdk/DeviceManager.kt
+index d843651..f7e1965 100644
+--- a/node_modules/@mentra/bluetooth-sdk/android/src/main/java/com/mentra/bluetoothsdk/DeviceManager.kt
++++ b/node_modules/@mentra/bluetooth-sdk/android/src/main/java/com/mentra/bluetoothsdk/DeviceManager.kt
+@@ -1763,6 +1763,8 @@ class DeviceManager internal constructor(initializeHardware: Boolean) {
+                 pendingDashboardSceneElementIds.addAll(prevFrame.elements.map { it.id })
+             } else if (layoutType != "clear_view" && shouldClearSceneHandoff(stateIndex)) {
+                 sgc?.clearSceneElements(prevFrame.elements.map { it.id })
++            } else {
++                Unit
+             }
+         }
+ 
+diff --git a/node_modules/@mentra/bluetooth-sdk/android/src/main/java/com/mentra/bluetoothsdk/MentraBluetoothSdk.kt b/node_modules/@mentra/bluetooth-sdk/android/src/main/java/com/mentra/bluetoothsdk/MentraBluetoothSdk.kt
+index b56ab97..0f24375 100644
+--- a/node_modules/@mentra/bluetooth-sdk/android/src/main/java/com/mentra/bluetoothsdk/MentraBluetoothSdk.kt
++++ b/node_modules/@mentra/bluetooth-sdk/android/src/main/java/com/mentra/bluetoothsdk/MentraBluetoothSdk.kt
+@@ -37,7 +37,7 @@ class MentraBluetoothSdk private constructor(
+     private val discoveredDeviceNames = mutableSetOf<String>()
+     private val bridgeEventSinkId: String
+     private val storeListenerId: String
+-    private val activityLifecycleCallbacks =
++    private val activityLifecycleCallbacks: Application.ActivityLifecycleCallbacks by lazy {
+         object : Application.ActivityLifecycleCallbacks {
+             override fun onActivityResumed(activity: Activity) {
+                 // Match the Mentra App's OnActivityEntersForeground hook. This runs after
+@@ -53,6 +53,7 @@ class MentraBluetoothSdk private constructor(
+             override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) = Unit
+             override fun onActivityDestroyed(activity: Activity) = Unit
+         }
++    }
+     private var activityLifecycleCallbacksRegistered = false
+     private var suppressDefaultDeviceEvents = false
+     private val streamSession = StreamSessionState()
+diff --git a/node_modules/@mentra/bluetooth-sdk/android/src/main/java/com/mentra/bluetoothsdk/sgcs/Nimo.kt b/node_modules/@mentra/bluetooth-sdk/android/src/main/java/com/mentra/bluetoothsdk/sgcs/Nimo.kt
+index 78b54b2..7e27585 100644
+--- a/node_modules/@mentra/bluetooth-sdk/android/src/main/java/com/mentra/bluetoothsdk/sgcs/Nimo.kt
++++ b/node_modules/@mentra/bluetooth-sdk/android/src/main/java/com/mentra/bluetoothsdk/sgcs/Nimo.kt
+@@ -203,7 +203,7 @@ internal fun nimoCrc16(data: ByteArray): Int {
+  * Frame layout (little-endian):
+  * - 8-byte transport header: [magic][status][len(2)][crc16(2)][index(2)]
+  * - 4-byte application header (requests): [cmd][key][len(2)]
+- * - responses/reports carry an extra status byte: [cmd][key][len(2)][status][data...]
++ * - responses/reports carry an extra status byte: [cmd][key][len(2)][status] then data
+  */
+ internal object NimoFrameCodec {
+ 
+diff --git a/node_modules/@mentra/bluetooth-sdk/android/src/main/java/com/mentra/bluetoothsdk/sgcs/NimoCanvasCodec.kt b/node_modules/@mentra/bluetooth-sdk/android/src/main/java/com/mentra/bluetoothsdk/sgcs/NimoCanvasCodec.kt
+index 8e7139c..8dd5c6a 100644
+--- a/node_modules/@mentra/bluetooth-sdk/android/src/main/java/com/mentra/bluetoothsdk/sgcs/NimoCanvasCodec.kt
++++ b/node_modules/@mentra/bluetooth-sdk/android/src/main/java/com/mentra/bluetoothsdk/sgcs/NimoCanvasCodec.kt
+@@ -65,6 +65,7 @@ internal object NimoCanvasCodec {
+           }
+           "rect" -> objects.add(rectangle(x, y, width, height, maxOf(1, border), radius))
+           "image" -> objects.add(bitmap(x, y, width, height, decodeImage(data!!, width, height)))
++          else -> Unit
+         }
+       }
+       require(objects.size <= 64)
