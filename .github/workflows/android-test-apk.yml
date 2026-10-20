@@ -1,0 +1,47 @@
+name: Android test APK
+
+# Builds "StreamPal POV Test" (separate app ID) on GitHub instead of EAS.
+# Run it from the Actions tab: choose the branch, then "Run workflow".
+# The APK is signed with the standard debug key, which is fine for sideloading a test app.
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: peakstream
+    env:
+      APP_VARIANT: test
+      CI: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+          cache-dependency-path: peakstream/yarn.lock
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Install dependencies (also applies the Mentra SDK patch)
+        run: yarn install --frozen-lockfile
+
+      - name: Generate the native Android project
+        run: npx expo prebuild --platform android --no-install
+
+      - name: Build release APK
+        working-directory: peakstream/android
+        run: ./gradlew :app:assembleRelease --no-daemon -Dorg.gradle.jvmargs="-Xmx4g -XX:MaxMetaspaceSize=1g"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: StreamPal-POV-Test-apk
+          path: peakstream/android/app/build/outputs/apk/release/*.apk
+          if-no-files-found: error
