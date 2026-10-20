@@ -1,9 +1,12 @@
 name: Android test APK
 
 # Builds "StreamPal POV Test" (separate app ID) on GitHub instead of EAS.
-# Run it from the Actions tab: choose the branch, then "Run workflow".
+# It runs on every push to the sdk-update branch (GitHub only offers the manual
+# "Run workflow" button for files that exist on the default branch).
 # The APK is signed with the standard debug key, which is fine for sideloading a test app.
 on:
+  push:
+    branches: [sdk-update]
   workflow_dispatch:
 
 jobs:
