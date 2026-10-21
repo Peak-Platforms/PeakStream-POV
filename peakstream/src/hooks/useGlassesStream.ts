@@ -167,8 +167,15 @@ export function useGlassesStream() {
         onResults: (nextDevices: Device[]) => {
           setDiscoveredDevices([...nextDevices]);
         },
+        // The SDK explains why a scan found nothing (permissions, Location off, etc.)
+        onDiagnostic: (d: { code: string; message: string }) => {
+          setError(`Scan hint (${d.code}): ${d.message}`);
+        },
       });
       setDiscoveredDevices(devices);
+      if (devices.length === 0) {
+        setError((prev) => prev ?? 'Scan finished: no glasses found. Make sure the glasses are awake and not connected to another app.');
+      }
     } catch (e: any) {
       setError(e?.message ?? 'Scan failed');
     } finally {
